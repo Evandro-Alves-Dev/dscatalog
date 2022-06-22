@@ -1,16 +1,15 @@
 package com.devsuperior.dscatalog.resources;
 
+import com.devsuperior.dscatalog.dto.CategoryRequest;
 import com.devsuperior.dscatalog.dto.CategoryResponse;
 import com.devsuperior.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -29,5 +28,12 @@ public class CategoryResource {
     public ResponseEntity<CategoryResponse> findById(@PathVariable Long id){
         var response = categoryService.findById(id);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponse> insert(@RequestBody CategoryRequest categoryRequest) {
+        var response = categoryService.insert(categoryRequest);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(response.getId()).toUri();
+        return ResponseEntity.created(uri).body(response);
     }
 }
