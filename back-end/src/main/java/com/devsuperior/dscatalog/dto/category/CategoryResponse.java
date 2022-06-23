@@ -1,4 +1,4 @@
-package com.devsuperior.dscatalog.dto;
+package com.devsuperior.dscatalog.dto.category;
 
 import com.devsuperior.dscatalog.entities.Category;
 import lombok.AllArgsConstructor;
