@@ -4,12 +4,14 @@ import com.devsuperior.dscatalog.dto.CategoryRequest;
 import com.devsuperior.dscatalog.dto.CategoryResponse;
 import com.devsuperior.dscatalog.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/categories")
@@ -19,9 +21,16 @@ public class CategoryResource {
     private CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findAll(){
-        var list = categoryService.findAll();
-        return ResponseEntity.ok().body(list);
+    public ResponseEntity<Page<CategoryResponse>> findAll(
+            @RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "linesPerPage", defaultValue = "12") Integer linesPerPage,
+            @RequestParam(value = "direction", defaultValue = "ASC") String direction,
+            @RequestParam(value = "orderBy", defaultValue = "name") String orderBy
+
+    ){
+        PageRequest pageRequest = PageRequest.of(page,linesPerPage, Sort.Direction.valueOf(direction), orderBy);
+        var pageList = categoryService.findAllPaged(pageRequest);
+        return ResponseEntity.ok().body(pageList);
     }
 
     @GetMapping(value = "/{id}")

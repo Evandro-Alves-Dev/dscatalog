@@ -9,6 +9,8 @@ import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,12 +25,10 @@ public class CategoryService {
     private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
-    public List<CategoryResponse> findAll() {
-        var list = categoryRepository.findAll();
+    public Page<CategoryResponse> findAllPaged(PageRequest pageRequest) {
+        var list = categoryRepository.findAll(pageRequest);
         return list
-                .stream()
-                .map(category -> new CategoryResponse(category.getId(), category.getName()))
-                .collect(Collectors.toList());
+                .map(category -> new CategoryResponse(category));
     }
 
     @Transactional(readOnly = true)
