@@ -8,6 +8,7 @@ import com.devsuperior.dscatalog.entities.Category;
 import com.devsuperior.dscatalog.entities.Product;
 import com.devsuperior.dscatalog.exceptions.DataBaseException;
 import com.devsuperior.dscatalog.exceptions.ResourceNotFoundException;
+import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -24,6 +25,9 @@ public class ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> findAllPaged(PageRequest pageRequest) {
@@ -42,7 +46,7 @@ public class ProductService {
     @Transactional
     public ProductResponse insert(ProductRequest productRequest) {
         Product product = new Product();
-//        product.setName(productRequest.getName());
+        copyDtoToEntity(productRequest, product);
         product = productRepository.save(product);
         return new ProductResponse(product);
     }
@@ -51,7 +55,7 @@ public class ProductService {
     public ProductResponse update(Long id,ProductRequest productRequest) {
         try {
             var entity = productRepository.getOne(id);
-//            entity.setName(categoryRequest.getName());
+            copyDtoToEntity(productRequest, entity);
             entity = productRepository.save(entity);
             return new ProductResponse(entity);
         } catch (EntityNotFoundException e ) {
@@ -66,6 +70,20 @@ public class ProductService {
             throw new ResourceNotFoundException("Id not found " + id);
         } catch (DataIntegrityViolationException e) {
             throw new DataBaseException("Integrity violation");
+        }
+    }
+
+    private void copyDtoToEntity(ProductRequest productRequest, Product product) {
+        product.setName(productRequest.getName());
+        product.setDate(productRequest.getDate());
+        product.setPrice(productRequest.getPrice());
+        product.setDescription(productRequest.getDescription());
+        product.setImgUrl(productRequest.getImgUrl());
+
+        product.getCategories().clear();
+        for (CategoryResponse catResponse : productRequest.getCategories()) {
+            Category category = categoryRepository.getOne(catResponse.getId());
+            product.getCategories().add(category);
         }
     }
 }
