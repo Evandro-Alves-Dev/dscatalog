@@ -17,7 +17,6 @@ import java.util.Set;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class ProductResponse implements Serializable {
 
     private Long id;
@@ -41,5 +40,9 @@ public class ProductResponse implements Serializable {
     public ProductResponse(Product product, Set<Category> categories) {
         this(product);
         categories.forEach(cat -> this.categories.add(new CategoryResponse(cat)));
+    }
+
+    public ProductResponse() {
+
     }
 }

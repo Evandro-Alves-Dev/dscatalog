@@ -11,7 +11,6 @@ import java.io.Serializable;
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class CategoryResponse implements Serializable {
 
     private Long id;
@@ -20,5 +19,9 @@ public class CategoryResponse implements Serializable {
     public CategoryResponse(Category category){
         this.id = category.getId();
         this.name = category.getName();
+    }
+
+    public CategoryResponse() {
+
     }
 }
