@@ -1,6 +1,5 @@
 package com.devsuperior.dscatalog.services;
 
-import com.devsuperior.dscatalog.dto.category.CategoryRequest;
 import com.devsuperior.dscatalog.dto.category.CategoryResponse;
 import com.devsuperior.dscatalog.dto.product.ProductRequest;
 import com.devsuperior.dscatalog.dto.product.ProductResponse;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
